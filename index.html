@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="form" id="form">
+        <div class="lbl">
+            <label for="fnome">Nome:</label>
+        </div>
+        <div id="nome">
+            <input type="text" id="fnome" v-model="fnome">
+        </div>
+
+        <div class="lbl">
+            <label for="fsalario">Salario:</label>
+        </div>
+        <div id="salario">
+            <input type="number" id="fsalario" v-model="fsalario">
+        </div>
+
+        <div class="lbl">
+            <label for="fidade">Idade:</label>
+        </div>
+        <div id="idade">
+            <input type="number" id="fidade" min="18" max="100" v-model="fidade">
+        </div>
+
+        <div class="lbl">
+            &nbsp;
+        </div>
+        <div>
+            <button id="salvar" v-on:click="salvar">Salvar</button>
+        </div>
+    </div>
+
+    <div id="listagem">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Salario</th>
+                    <th>Idade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="func in funcionarios">
+                    <td>{{func.employee_name}}</td>
+                    <td>{{func.employee_salary}}</td>
+                    <td>{{func.employee_age}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        var funcs
+
+        axios.get('http://localhost:3000/employees')
+            .then(function (response) {
+                getFuncs(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        var getFuncs = (resp) => {
+            funcs = resp
+        }
+
+        console.log(funcs)
+
+        var app = new Vue({
+            el: '#form',
+            data: {
+                fnome: '',
+                fsalario: 0,
+                fidade: 0,
+                funcionarios: funcs
+            },
+            methods: {
+                salvar: function () {
+                    salvaFunc(fnome.value, fsalario.value, fidade.value)
+                }
+            }
+        })
+
+        var salvaFunc = (snome, ssalario, sidade) => {
+            axios.post('http://localhost:3000/employees', {
+                employee_name: snome,
+                employee_salary: ssalario,
+                employee_age: sidade
+            }).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+.form {
+    display: grid;
+    grid-template-columns: 80px auto;
+}
+
+.lbl {
+    text-align: right;
+}
+
+.form div {
+    padding: 5px;
+}
+
+.form input {
+    width: 200px;
+}
