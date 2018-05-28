@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w"
+        crossorigin="anonymous">
+
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
@@ -41,52 +44,59 @@
     </div>
 
     <div id="listagem">
-        <table>
+        <table class="pure-table">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Salario</th>
                     <th>Idade</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="func in funcionarios">
-                    <td>{{func.employee_name}}</td>
-                    <td>{{func.employee_salary}}</td>
-                    <td>{{func.employee_age}}</td>
+                    <td style="width: 70%">{{func.employee_name}}</td>
+                    <td style="width: 10%">{{func.employee_salary}}</td>
+                    <td style="width: 10%">{{func.employee_age}}</td>
+                    <td style="width: 10%">
+                        <a href="#" v-on:click="excluir(func.id)">Excluir</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <script>
-        var funcs
 
-        axios.get('http://localhost:3000/employees')
-            .then(function (response) {
-                getFuncs(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        var getFuncs = (resp) => {
-            funcs = resp
+        var listaFuncs = () => {
+            axios.get('http://localhost:3000/employees')
+                .then(function (response) {
+                    listagem.funcionarios = response.data
+                })
         }
 
-        console.log(funcs)
-
-        var app = new Vue({
+        var form = new Vue({
             el: '#form',
             data: {
                 fnome: '',
                 fsalario: 0,
-                fidade: 0,
-                funcionarios: funcs
+                fidade: 0
             },
             methods: {
                 salvar: function () {
                     salvaFunc(fnome.value, fsalario.value, fidade.value)
+                }
+            }
+        })
+
+        var listagem = new Vue({
+            el: '#listagem',
+            data: {
+                funcionarios: null
+            },
+            methods: {
+                excluir: function(id) {
+                    deletaFunc(id)
                 }
             }
         })
@@ -97,11 +107,24 @@
                 employee_salary: ssalario,
                 employee_age: sidade
             }).then(function (response) {
+                listaFuncs()
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        var deletaFunc = (sid) => {
+            axios.delete('http://localhost:3000/employees/:id', {
+                id: sid
+            }).then(function (response) {
+                listaFuncs()
                 console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
         }
+
+        listaFuncs()
     </script>
 </body>
 
