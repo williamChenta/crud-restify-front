@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" href="estilo.css">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" 
+    integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>    
 </head>
 
 <body>
@@ -67,80 +67,8 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-
-    <script>
-
-        var listaFuncs = () => {
-            axios.get('http://localhost:3000/employees')
-                .then(function (response) {
-                    listagem.funcionarios = response.data
-                })
-        }
-
-        var form = new Vue({
-            el: '#form',
-            data: {
-                fid: null,
-                fnome: null,
-                fsalario: null,
-                fidade: null
-            },
-            methods: {
-                salvar: function () {
-                    salvaFunc(fnome.value, fsalario.value, fidade.value)
-                }
-            }
-        })
-
-        var listagem = new Vue({
-            el: '#listagem',
-            data: {
-                funcionarios: null,
-                funcionarioSel: null
-            },
-            methods: {
-                excluir: function (id) {
-                    deletaFunc(id)
-                },
-                alterar: function (id) {
-                    alteraFunc(id)
-                }
-            }
-        })
-
-        var salvaFunc = (snome, ssalario, sidade) => {
-            axios.post('http://localhost:3000/employees', {
-                employee_name: snome,
-                employee_salary: ssalario,
-                employee_age: sidade
-            }).then(function (response) {
-                listaFuncs()
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-
-        var deletaFunc = (sid) => {
-            axios.delete('http://localhost:3000/employees/' + sid).then(function (response) {
-                listaFuncs()
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-
-        var alteraFunc = (sid) => {
-            axios.get('http://localhost:3000/employees/' + sid)
-                .then(function (response) {
-                    form.fid = response.data[0].id
-                    form.fnome = response.data[0].employee_name
-                    form.fidade = response.data[0].employee_age
-                    form.fsalario = response.data[0].employee_salary
-                })
-        }
-
-        listaFuncs()
-    </script>
+    </div>    
+    <script src="crud.js"></script>
 </body>
 
 </html>
